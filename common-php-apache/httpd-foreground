@@ -1,0 +1,16 @@
+#!/bin/sh
+set -e
+
+php-fpm -D
+php-fpm_exporter server --phpfpm.fix-process-count </dev/null >/dev/null 2>&1 &
+
+unset HOME
+export LANG=C
+export APACHE_PID_FILE=/var/run/apache2/apache2.pid
+export APACHE_RUN_DIR=/var/run/apache2
+export APACHE_LOCK_DIR=/var/lock/apache2
+export APACHE_LOG_DIR=/var/log/apache2
+
+mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR
+rm -f /var/run/apache2/apache2.pid
+exec /usr/sbin/apache2 -DFOREGROUND
