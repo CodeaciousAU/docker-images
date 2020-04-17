@@ -1,0 +1,12 @@
+{
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.org"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "store-auths": false
+    }
+}
