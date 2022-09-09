@@ -52,7 +52,7 @@ RUN apt-get update \
         imagick \
         memcached \
         mongodb \
-        xdebug \
+        xdebug-2.9.8 \
     && rm -Rf /tmp/pear \
     && apt-get remove -y --purge \
         libfreetype6-dev \
