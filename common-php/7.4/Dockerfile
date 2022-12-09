@@ -1,4 +1,7 @@
+# syntax=docker/dockerfile:1
+
 FROM php:7.4-fpm-buster
+ARG TARGETARCH
 SHELL ["/bin/bash", "-c"]
 
 # Build (but don't enable) commonly used PHP modules
@@ -71,16 +74,19 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install xhprof extension
-RUN cd /tmp \
-    && curl -L -o xhprof.deb https://github.com/tideways/php-xhprof-extension/releases/download/v5.0.2/tideways-xhprof_5.0.2_amd64.deb \
+RUN if [ "$TARGETARCH" == "amd64" ]; then \
+    cd /tmp \
+    && curl -f -L -o xhprof.deb https://github.com/tideways/php-xhprof-extension/releases/download/v5.0.2/tideways-xhprof_5.0.2_amd64.deb \
     && dpkg -i xhprof.deb \
     && rm xhprof.deb \
-    && ln -s /usr/lib/tideways_xhprof/tideways_xhprof-7.4.so "$(php -d 'display_errors=stderr' -r 'echo ini_get("extension_dir");')/tideways_xhprof.so"
+    && ln -s /usr/lib/tideways_xhprof/tideways_xhprof-7.4.so "$(php -d 'display_errors=stderr' -r 'echo ini_get("extension_dir");')/tideways_xhprof.so" \
+; fi
 
 # Install Node and NPM
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+RUN curl -fL https://deb.nodesource.com/setup_12.x | bash - \
     && apt-get install -y \
         nodejs \
+        python \
     && rm -rf /var/lib/apt/lists/*
 
 # Install composer

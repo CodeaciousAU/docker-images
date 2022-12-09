@@ -1,5 +1,8 @@
+# syntax=docker/dockerfile:1
+
 ARG php_version=latest
 FROM codeacious/common-php:$php_version
+ARG TARGETARCH
 USER root
 
 RUN apt-get update \
@@ -42,7 +45,7 @@ RUN rm -Rf /var/www/html \
     && chown www-data:www-data /var/lock/apache2
 
 # Install php-fpm metrics exporter
-RUN curl -sL https://github.com/hipages/php-fpm_exporter/releases/download/v1.0.0/php-fpm_exporter_1.0.0_linux_amd64 \
+RUN curl -fL "https://github.com/hipages/php-fpm_exporter/releases/download/v2.2.0/php-fpm_exporter_2.2.0_linux_$TARGETARCH" \
   -o /usr/local/bin/php-fpm_exporter \
     && chmod +x /usr/local/bin/php-fpm_exporter
 
